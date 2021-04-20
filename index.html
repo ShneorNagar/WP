@@ -9,17 +9,42 @@
 
 <script>
 
-    addEventListener('load', async ()=>{
-        let sw = await navigator.serviceWorker.register('./sw.js');
-        console.log(sw);
+    addEventListener('load', () => {
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then((reg) => {
+                console.log('Service Worker Registered!', reg);
+
+                reg.pushManager.getSubscription().then((sub) => {
+                    if (sub === null) {
+                        // Update UI to ask user to register for Push
+                        console.log('Not subscribed to push service!');
+                        subscribe();
+                    } else {
+                        // We have a subscription, update the database
+                        console.log('Subscription object: ', sub);
+                    }
+                });
+            })
+                .catch((err) => {
+                    console.log('Service Worker registration failed: ', err);
+                });
+        }
     })
 
-    async function subscribe(){
-        let sw = await navigator.serviceWorker.ready;
-        let push = await sw.pushManager.subscribe({
+    function subscribe() {
+        let sw = {};
+        navigator.serviceWorker.ready.then((val) => {
+            sw = val;
+        });
+        let push = {};
+        sw.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: 'BJIvROxYi3VkdMe9LDKDAkyrJ-do6Cgt_ZzVEViq_VWW4UvxwGqSHYNavDqoFNShRxYxCjYI5gHzZngvgU5d1YE'
+        }).then((subscription) => {
+            push = subscription;
         })
+        // @param push should be in server DB
         console.log(JSON.stringify(push))
     }
 </script>
