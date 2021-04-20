@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WP</title>
+</head>
+<body>
+<button onclick="subscribe()">Subscribe</button>
+
+<script>
+
+    addEventListener('load', async ()=>{
+        let sw = await navigator.serviceWorker.register('./sw.js');
+        console.log(sw);
+    })
+
+    async function subscribe(){
+        let sw = await navigator.serviceWorker.ready;
+        let push = await sw.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: 'BJIvROxYi3VkdMe9LDKDAkyrJ-do6Cgt_ZzVEViq_VWW4UvxwGqSHYNavDqoFNShRxYxCjYI5gHzZngvgU5d1YE'
+        })
+        console.log(JSON.stringify(push))
+    }
+</script>
+</body>
+</html>
