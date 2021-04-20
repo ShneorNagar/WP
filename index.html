@@ -33,21 +33,17 @@
     })
 
     function subscribe() {
-        let sw = {};
-        navigator.serviceWorker.ready.then((val) => {
-            sw = val;
+        navigator.serviceWorker.ready.then((sw) => {
+            sw.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: 'BJIvROxYi3VkdMe9LDKDAkyrJ-do6Cgt_ZzVEViq_VWW4UvxwGqSHYNavDqoFNShRxYxCjYI5gHzZngvgU5d1YE'
+            }).then((subscription) => {
+                console.log(JSON.stringify(subscription))
+            })
+            // @param push should be in server DB
         }).catch((err)=>{
             console.log(err)
         });
-        let push = {};
-        sw.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: 'BJIvROxYi3VkdMe9LDKDAkyrJ-do6Cgt_ZzVEViq_VWW4UvxwGqSHYNavDqoFNShRxYxCjYI5gHzZngvgU5d1YE'
-        }).then((subscription) => {
-            push = subscription;
-        })
-        // @param push should be in server DB
-        console.log(JSON.stringify(push))
     }
 </script>
 </body>
